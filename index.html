@@ -49,11 +49,14 @@
             transition: transform 0.3s ease-in-out;
         }
 
-        @keyframes pulse-purple {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.4); }
-            50% { box-shadow: 0 0 20px 0 rgba(168, 85, 247, 0.2); }
+        .game-card:hover .video-preview {
+            opacity: 1;
         }
-        .ai-active { animation: pulse-purple 2s infinite; }
+
+        .video-preview {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
     </style>
 </head>
 <body class="h-screen flex text-slate-200">
@@ -87,82 +90,58 @@
     <!-- MAIN CONTENT -->
     <main class="flex-1 flex flex-col relative overflow-hidden">
         
-        <!-- SETTINGS VIEW (API KEY) -->
-        <section id="view-settings" class="hidden p-12 overflow-y-auto h-full bg-[#0d0d0f]">
-            <div class="max-w-2xl mx-auto">
-                <h1 class="text-4xl font-black mb-2 flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-3 text-yellow-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    Nastavenia Platformy
-                </h1>
-                <p class="text-slate-400 mb-10">Spravuj svoj prístup k AI a systémové dáta.</p>
-                
-                <div class="bg-[#16161a] border border-white/5 rounded-3xl p-8 shadow-2xl mb-8">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Gemini API Kľúč</label>
-                    <div class="flex space-x-3">
-                        <input id="input-api-key" type="password" placeholder="Vlož svoj API kľúč..." class="flex-1 bg-[#0a0a0b] border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition-all text-sm font-mono">
-                        <button onclick="saveApiKey()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 rounded-xl font-bold transition-all flex items-center">
-                            Uložiť
-                        </button>
-                    </div>
-                    <p class="mt-4 text-[11px] text-slate-500 italic leading-relaxed">
-                        Tento kľúč bude bezpečne uložený vo tvojej lokálnej databáze IndexedDB. Mental ho využíva na komunikáciu s asistentom.
-                    </p>
-                </div>
-
-                <div class="bg-[#16161a] border border-white/5 rounded-3xl p-8 opacity-50 pointer-events-none">
-                    <h3 class="font-bold mb-2">Stav Databázy</h3>
-                    <div class="flex items-center text-sm text-emerald-500">
-                        <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2 animate-pulse"></span> Pripojené: IndexedDB (Neobmedzené)
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- HOME VIEW -->
         <section id="view-home" class="p-12 overflow-y-auto h-full">
             <h1 class="text-6xl font-black mb-2 tracking-tight">MENTAL</h1>
-            <p class="text-slate-400 text-xl mb-12">Ekosystém pre tvorbu bizardných svetov.</p>
+            <p class="text-slate-400 text-xl mb-12">Platforma pre bizardnú tvorbu.</p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div onclick="openStudio()" class="h-64 glass rounded-3xl p-8 cursor-pointer hover:border-blue-500 transition-all group">
                     <div class="text-blue-500 mb-4 group-hover:scale-110 transition-transform"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.375 2.625a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4L18.375 2.625z"/></svg></div>
                     <h2 class="text-2xl font-bold mb-2">Mental Studio</h2>
-                    <p class="text-slate-400 text-sm">Vytváraj hry, nahrávaj zvuky a zverejňuj ich do knižnice.</p>
+                    <p class="text-slate-400 text-sm">Vytváraj hry, pridávaj 60s trailery a zvuky.</p>
                 </div>
                 <div onclick="switchView('player')" class="h-64 glass rounded-3xl p-8 cursor-pointer hover:border-emerald-500 transition-all group">
-                    <div class="text-emerald-500 mb-4 group-hover:scale-110 transition-transform"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><line x1="6" x2="10" y1="12" y2="12"/><line x1="15" x2="15" y1="13" y2="13"/></svg></div>
+                    <div class="text-emerald-500 mb-4 group-hover:scale-110 transition-transform"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="12" x="2" y="6" rx="2"/><line x1="6" x2="10" y1="12" y2="12"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="15" x2="15" y1="13" y2="13"/><line x1="18" x2="18" y1="11" y2="11"/></svg></div>
                     <h2 class="text-2xl font-bold mb-2">Mental Player</h2>
-                    <p class="text-slate-400 text-sm">Prehliadaj si svoju zbierku hier v tvojom prehliadači.</p>
+                    <p class="text-slate-400 text-sm">Prehliadaj hry s video náhľadmi.</p>
                 </div>
                 <div onclick="switchView('ai')" class="h-64 glass rounded-3xl p-8 border-purple-500/20 hover:border-purple-500 cursor-pointer transition-all group bg-purple-500/5">
                     <div class="text-purple-500 mb-4 group-hover:scale-110 transition-transform"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg></div>
                     <h2 class="text-2xl font-bold mb-2">AI Asistent</h2>
-                    <p class="text-slate-400 text-sm">Generuj šialené kódy cez Gemini API.</p>
+                    <p class="text-slate-400 text-sm">Generuj kód cez Gemini API.</p>
                 </div>
             </div>
         </section>
 
         <!-- PLAYER VIEW -->
         <section id="view-player" class="hidden p-12 overflow-y-auto h-full">
-            <h1 class="text-4xl font-black mb-10">Moja Knižnica</h1>
-            <div id="games-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"></div>
+            <h1 class="text-4xl font-black mb-10">Knižnica Hier</h1>
+            <div id="games-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"></div>
+        </section>
+
+        <!-- SETTINGS VIEW -->
+        <section id="view-settings" class="hidden p-12 overflow-y-auto h-full bg-[#0d0d0f]">
+            <div class="max-w-2xl mx-auto">
+                <h1 class="text-4xl font-black mb-2 flex items-center"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-3 text-yellow-400"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Nastavenia</h1>
+                <div class="bg-[#16161a] border border-white/5 rounded-3xl p-8 mt-10">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">Gemini API Kľúč</label>
+                    <div class="flex space-x-3">
+                        <input id="input-api-key" type="password" placeholder="Vlož kľúč..." class="flex-1 bg-[#0a0a0b] border border-white/10 rounded-xl px-4 py-3 outline-none focus:border-blue-500 transition-all text-sm font-mono">
+                        <button onclick="saveApiKey()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 rounded-xl font-bold transition-all">Uložiť</button>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- AI VIEW -->
         <section id="view-ai" class="hidden flex-1 flex flex-col items-center justify-center p-12 bg-[#0a0a0b]">
-            <div class="text-center max-w-lg">
-                <div class="w-16 h-16 bg-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-6"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg></div>
-                <h2 class="text-3xl font-bold mb-4">Generátor Bizarnej Zábavy</h2>
-                <p class="text-slate-400 mb-8">AI asistent vytvorí novú experimentálnu hru a okamžite ju zapíše do databázy.</p>
-                <button id="btn-ai-generate" onclick="generateAIGame()" class="bg-purple-600 hover:bg-purple-500 px-10 py-4 rounded-2xl font-black text-lg transition-all shadow-xl shadow-purple-900/20 flex items-center mx-auto">
-                    Spustiť Generovanie
-                    <svg id="ai-loading" class="hidden animate-spin ml-3 h-5 w-5 text-white" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
-                </button>
-            </div>
-            <div id="ai-last-result" class="hidden mt-12 w-full max-w-2xl bg-[#16161a] border border-purple-500/20 rounded-2xl p-6 text-center">
-                <span class="text-xs text-purple-400 font-bold uppercase tracking-widest mb-2 block">Nový výtvor uložený</span>
-                <h4 id="ai-res-title" class="text-xl font-bold"></h4>
-            </div>
+            <h2 class="text-3xl font-bold mb-4">AI Generátor</h2>
+            <button id="btn-ai-generate" onclick="generateAIGame()" class="bg-purple-600 hover:bg-purple-500 px-10 py-4 rounded-2xl font-black transition-all flex items-center">
+                Generovať Bizardnosť
+                <svg id="ai-loading" class="hidden animate-spin ml-3 h-5 w-5 text-white" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg>
+            </button>
+            <div id="ai-last-result" class="hidden mt-8 text-purple-400 font-bold">Hra uložená v knižnici!</div>
         </section>
 
         <!-- STUDIO VIEW -->
@@ -173,20 +152,29 @@
                     <input id="studio-icon" type="text" value="🎮" class="bg-transparent w-8 text-center outline-none">
                 </div>
                 <div class="flex items-center space-x-3">
-                    <button onclick="toggleStudioSettings()" class="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-slate-400 transition-all" title="Grafické nastavenia">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                    </button>
-                    <button onclick="publishGame()" class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-lg font-bold flex items-center transition-all">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg>
-                        Zverejniť
-                    </button>
+                    <button onclick="toggleStudioSettings()" class="p-2 bg-white/5 hover:bg-white/10 rounded-lg text-slate-400 transition-all"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+                    <button onclick="publishGame()" class="bg-blue-600 hover:bg-blue-500 px-6 py-2 rounded-lg font-bold flex items-center transition-all"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg> Zverejniť</button>
                 </div>
             </header>
 
             <div class="flex flex-1 overflow-hidden relative">
                 <!-- Assets Panel -->
                 <div class="w-64 bg-[#111114] border-r border-white/5 flex flex-col p-4 shrink-0 overflow-y-auto">
-                    <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Assety (Zvuky MP3)</h3>
+                    <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Video Trailer (60s)</h3>
+                    <label id="video-dropzone" class="w-full bg-purple-500/5 hover:bg-purple-500/10 border border-dashed border-purple-500/30 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" class="mb-2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="m9 8 6 4-6 4Z"/></svg>
+                        <span class="text-[10px] font-bold text-purple-200">Nahrať Trailer</span>
+                        <input type="file" id="video-upload" class="hidden" accept="video/mp4,video/webm">
+                    </label>
+                    <div id="video-status" class="hidden mb-6 p-3 glass rounded-lg text-[9px]">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-emerald-400 font-bold">VIDEO NAHRANÉ</span>
+                            <button onclick="removeVideo()" class="text-red-500 hover:text-red-400">ODSTRÁNIŤ</button>
+                        </div>
+                        <video id="video-preview-small" class="w-full rounded border border-white/10" muted autoplay loop></video>
+                    </div>
+
+                    <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Zvuky (MP3)</h3>
                     <label class="w-full bg-white/5 hover:bg-white/10 border border-dashed border-white/10 rounded-xl p-4 flex flex-col items-center justify-center cursor-pointer transition-all mb-4">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mb-2 text-slate-400"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
                         <span class="text-[10px] font-bold">Nahrať MP3</span>
@@ -197,56 +185,27 @@
 
                 <!-- Editor -->
                 <div class="flex-1 flex flex-col border-r border-white/5">
-                    <div class="bg-[#16161a] px-4 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-white/5">HTML Editor</div>
                     <textarea id="studio-editor" class="editor-textarea flex-1 p-6 outline-none resize-none" spellcheck="false"></textarea>
                 </div>
 
                 <!-- Preview area -->
-                <div class="w-2/5 bg-[#050505] flex flex-col p-6 overflow-y-auto relative">
-                    <div class="flex items-center justify-between mb-2 text-xs text-slate-500 px-1 font-bold">
-                        <span>PRÁVE SA RENDERUJE</span>
-                        <div class="flex space-x-3">
-                            <span id="quality-indicator" class="text-[9px] bg-white/5 px-2 py-0.5 rounded">QUAL: HIGH</span>
-                            <span id="fps-indicator" class="text-[9px] bg-white/5 px-2 py-0.5 rounded">FPS: 60</span>
-                        </div>
-                    </div>
+                <div class="w-1/3 bg-[#050505] flex flex-col p-6 overflow-y-auto relative">
                     <div class="aspect-video bg-black rounded-xl overflow-hidden shadow-2xl ring-1 ring-white/10">
                         <iframe id="studio-preview" class="w-full h-full border-none"></iframe>
                     </div>
-                    <div class="mt-6 p-4 glass rounded-xl text-[11px] leading-relaxed text-slate-400">
-                        <strong class="text-slate-200 block mb-1">Ako používať zvuky:</strong>
-                        Pre prehratie nahraného zvuku použi v kóde:<br>
-                        <code class="text-blue-400">const snd = new Audio(window.MENTAL_SOUNDS["moj_zvuk.mp3"]);<br>snd.play();</code>
-                    </div>
                 </div>
 
-                <!-- Studio Settings Sidebar (Sliding) -->
-                <div id="studio-settings-sidebar" class="absolute right-0 top-0 h-full w-64 bg-[#111114] border-l border-white/10 p-6 z-40 translate-x-full transition-transform duration-300 shadow-2xl">
-                    <div class="flex items-center justify-between mb-8">
-                        <h3 class="font-black text-xs uppercase tracking-widest text-blue-500">Nastavenia Rendru</h3>
-                        <button onclick="toggleStudioSettings()" class="text-slate-500 hover:text-white"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
-                    </div>
+                <!-- Settings Sidebar -->
+                <div id="studio-settings-sidebar" class="absolute right-0 top-0 h-full w-64 bg-[#111114] border-l border-white/10 p-6 z-40 translate-x-full transition-transform duration-300">
+                    <h3 class="font-black text-xs uppercase tracking-widest text-blue-500 mb-8 text-center">Engine Settings</h3>
                     <div class="space-y-6">
                         <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-3">Kvalita Grafiky</label>
-                            <select id="studio-setting-quality" onchange="updatePreview()" class="w-full bg-[#1c1c21] border border-white/10 rounded-lg p-2 text-sm outline-none focus:border-blue-500">
-                                <option value="low">Nízka (Performance)</option>
-                                <option value="medium">Stredná</option>
-                                <option value="high" selected>Vysoká (Realistic)</option>
-                            </select>
+                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-2">Kvalita</label>
+                            <select id="studio-setting-quality" onchange="updatePreview()" class="w-full bg-[#1c1c21] rounded-lg p-2 text-sm outline-none"><option value="low">Low</option><option value="medium">Medium</option><option value="high" selected>High</option></select>
                         </div>
                         <div>
-                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-3">Limit FPS</label>
-                            <select id="studio-setting-fps" onchange="updatePreview()" class="w-full bg-[#1c1c21] border border-white/10 rounded-lg p-2 text-sm outline-none focus:border-blue-500">
-                                <option value="30">30 FPS (Cinematic)</option>
-                                <option value="60" selected>60 FPS (Smooth)</option>
-                                <option value="0">Uncapped (Max)</option>
-                            </select>
-                        </div>
-                        <div class="pt-4 border-t border-white/5">
-                            <p class="text-[9px] text-slate-500 italic leading-relaxed">
-                                Nastavenia sú prístupné v kóde cez <b>window.MENTAL_CONFIG</b>.
-                            </p>
+                            <label class="text-[10px] font-bold text-slate-500 uppercase block mb-2">FPS Limit</label>
+                            <select id="studio-setting-fps" onchange="updatePreview()" class="w-full bg-[#1c1c21] rounded-lg p-2 text-sm outline-none"><option value="30">30</option><option value="60" selected>60</option><option value="0">Max</option></select>
                         </div>
                     </div>
                 </div>
@@ -255,11 +214,8 @@
 
         <!-- GAME OVERLAY -->
         <div id="view-game-overlay" class="hidden fixed inset-0 z-[100] bg-black flex flex-col">
-            <div class="h-14 bg-[#111114] flex items-center justify-between px-6">
-                <div class="flex items-center space-x-4">
-                    <span id="overlay-icon" class="text-2xl"></span>
-                    <h2 id="overlay-title" class="font-bold"></h2>
-                </div>
+            <div class="h-14 bg-[#111114] flex items-center justify-between px-6 border-b border-white/5">
+                <div class="flex items-center space-x-4"><span id="overlay-icon" class="text-2xl"></span><h2 id="overlay-title" class="font-bold"></h2></div>
                 <button onclick="closeGame()" class="px-6 py-1.5 bg-red-600 hover:bg-red-500 text-white rounded-lg text-sm font-bold transition-all">Ukončiť</button>
             </div>
             <iframe id="game-runner" class="flex-1 w-full border-none"></iframe>
@@ -270,246 +226,197 @@
     <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 px-6 py-3 bg-blue-600 rounded-full text-sm font-bold shadow-2xl transition-all translate-y-20 opacity-0 pointer-events-none z-[200]"></div>
 
     <script>
-        // --- DATABASE INIT ---
+        // --- DATABASE ---
         const DB_NAME = 'MentalDB';
-        const DB_STORE_GAMES = 'games';
-        const DB_STORE_CONFIG = 'config';
+        const DB_VERSION = 3; 
         let db;
 
-        const request = indexedDB.open(DB_NAME, 2);
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
         request.onupgradeneeded = (e) => {
             const db = e.target.result;
-            if (!db.objectStoreNames.contains(DB_STORE_GAMES)) db.createObjectStore(DB_STORE_GAMES, { keyPath: 'id', autoIncrement: true });
-            if (!db.objectStoreNames.contains(DB_STORE_CONFIG)) db.createObjectStore(DB_STORE_CONFIG, { keyPath: 'key' });
+            if (!db.objectStoreNames.contains('games')) db.createObjectStore('games', { keyPath: 'id', autoIncrement: true });
+            if (!db.objectStoreNames.contains('config')) db.createObjectStore('config', { keyPath: 'key' });
         };
-        request.onsuccess = (e) => {
-            db = e.target.result;
-            loadApiKeyFromDB();
-            loadGames();
-        };
+        request.onsuccess = (e) => { db = e.target.result; loadApiKeyFromDB(); loadGames(); };
 
         let currentEditingId = null;
-        let gameAssets = {}; // Name -> Base64
+        let gameAssets = {};
+        let gameVideo = null; // Base64 video data
 
-        // --- API KEY LOGIC ---
+        // --- API KEY ---
         function saveApiKey() {
             const key = document.getElementById('input-api-key').value;
-            const tx = db.transaction(DB_STORE_CONFIG, 'readwrite');
-            tx.objectStore(DB_STORE_CONFIG).put({ key: 'gemini_api', value: key });
-            showToast("API kľúč bol uložený nastálo!");
+            db.transaction('config', 'readwrite').objectStore('config').put({ key: 'gemini_api', value: key });
+            showToast("API kľúč uložený!");
         }
-
         async function loadApiKeyFromDB() {
-            const tx = db.transaction(DB_STORE_CONFIG, 'readonly');
-            const req = tx.objectStore(DB_STORE_CONFIG).get('gemini_api');
-            req.onsuccess = () => {
-                if (req.result) document.getElementById('input-api-key').value = req.result.value;
+            db.transaction('config', 'readonly').objectStore('config').get('gemini_api').onsuccess = (e) => {
+                if (e.target.result) document.getElementById('input-api-key').value = e.target.result.value;
             };
         }
 
-        async function getSavedApiKey() {
-            return new Promise((resolve) => {
-                const tx = db.transaction(DB_STORE_CONFIG, 'readonly');
-                const req = tx.objectStore(DB_STORE_CONFIG).get('gemini_api');
-                req.onsuccess = () => resolve(req.result ? req.result.value : "");
-            });
-        }
+        // --- VIDEO UPLOAD ---
+        document.getElementById('video-upload').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
 
-        // --- ASSET LOGIC ---
-        document.getElementById('asset-upload').addEventListener('change', async (e) => {
-            const files = e.target.files;
-            for (let file of files) {
+            // Check duration
+            const videoElement = document.createElement('video');
+            videoElement.preload = 'metadata';
+            videoElement.onloadedmetadata = () => {
+                window.URL.revokeObjectURL(videoElement.src);
+                if (videoElement.duration > 61) {
+                    alert("Video je príliš dlhé! Limit je 60 sekúnd.");
+                    return;
+                }
+                
                 const reader = new FileReader();
                 reader.onload = (ev) => {
-                    gameAssets[file.name] = ev.target.result;
-                    renderAssets();
-                    updatePreview();
+                    gameVideo = ev.target.result;
+                    showVideoStatus();
                 };
+                reader.readAsDataURL(file);
+            };
+            videoElement.src = URL.createObjectURL(file);
+        });
+
+        function showVideoStatus() {
+            const status = document.getElementById('video-status');
+            const dropzone = document.getElementById('video-dropzone');
+            const preview = document.getElementById('video-preview-small');
+            status.classList.remove('hidden');
+            dropzone.classList.add('hidden');
+            preview.src = gameVideo;
+        }
+
+        function removeVideo() {
+            gameVideo = null;
+            document.getElementById('video-status').classList.add('hidden');
+            document.getElementById('video-dropzone').classList.remove('hidden');
+        }
+
+        // --- ASSETS ---
+        document.getElementById('asset-upload').addEventListener('change', async (e) => {
+            for (let file of e.target.files) {
+                const reader = new FileReader();
+                reader.onload = (ev) => { gameAssets[file.name] = ev.target.result; renderAssets(); updatePreview(); };
                 reader.readAsDataURL(file);
             }
         });
-
         function renderAssets() {
             const list = document.getElementById('asset-list');
             list.innerHTML = '';
             Object.keys(gameAssets).forEach(name => {
                 const div = document.createElement('div');
-                div.className = "p-3 bg-white/5 border border-white/5 rounded-lg flex items-center justify-between group";
-                div.innerHTML = `
-                    <div class="flex items-center overflow-hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="mr-2 text-blue-400 shrink-0"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                        <span class="text-[10px] font-bold truncate">${name}</span>
-                    </div>
-                    <button onclick="removeAsset('${name}')" class="opacity-0 group-hover:opacity-100 p-1 hover:text-red-500"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
-                `;
+                div.className = "p-2 bg-white/5 rounded-lg flex items-center justify-between text-[10px] font-bold";
+                div.innerHTML = `<span class="truncate">${name}</span><button onclick="removeAsset('${name}')" class="text-red-500">X</button>`;
                 list.appendChild(div);
             });
         }
+        function removeAsset(n) { delete gameAssets[n]; renderAssets(); updatePreview(); }
 
-        function removeAsset(name) {
-            delete gameAssets[name];
-            renderAssets();
-            updatePreview();
-        }
-
-        // --- NAVIGATION & STUDIO ---
-        const studioEditor = document.getElementById('studio-editor');
-        const studioPreview = document.getElementById('studio-preview');
-
-        function switchView(name) {
+        // --- NAVIGATION ---
+        function switchView(v) {
             document.querySelectorAll('section').forEach(s => s.classList.add('hidden'));
             document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
-            document.getElementById('view-' + name).classList.remove('hidden');
-            document.getElementById('nav-' + name)?.classList.add('active');
-            if (name === 'player') loadGames();
+            document.getElementById('view-' + v).classList.remove('hidden');
+            document.getElementById('nav-' + v)?.classList.add('active');
+            if (v === 'player') loadGames();
         }
+        function toggleStudioSettings() { document.getElementById('studio-settings-sidebar').classList.toggle('translate-x-full'); }
 
-        function toggleStudioSettings() {
-            const sidebar = document.getElementById('studio-settings-sidebar');
-            sidebar.classList.toggle('translate-x-full');
-        }
-
+        // --- STUDIO ---
         function openStudio(id = null) {
             switchView('studio');
             gameAssets = {};
+            gameVideo = null;
+            removeVideo();
             if (id) {
-                const tx = db.transaction(DB_STORE_GAMES, 'readonly');
-                tx.objectStore(DB_STORE_GAMES).get(id).onsuccess = (e) => {
+                db.transaction('games', 'readonly').objectStore('games').get(id).onsuccess = (e) => {
                     const g = e.target.result;
+                    if (!g) return;
                     currentEditingId = g.id;
-                    document.getElementById('studio-title').value = g.title;
-                    document.getElementById('studio-icon').value = g.icon;
-                    studioEditor.value = g.code;
+                    document.getElementById('studio-title').value = g.title || "Bez názvu";
+                    document.getElementById('studio-icon').value = g.icon || "🎮";
+                    document.getElementById('studio-editor').value = g.code || "";
                     gameAssets = g.assets || {};
-                    if(g.config) {
-                        document.getElementById('studio-setting-quality').value = g.config.quality || 'high';
-                        document.getElementById('studio-setting-fps').value = g.config.fps || '60';
-                    }
+                    gameVideo = g.video || null;
+                    if (gameVideo) showVideoStatus();
                     renderAssets();
                     updatePreview();
                 };
             } else {
                 currentEditingId = null;
                 document.getElementById('studio-title').value = "Nová Hra";
-                document.getElementById('studio-setting-quality').value = 'high';
-                document.getElementById('studio-setting-fps').value = '60';
-                studioEditor.value = `<!DOCTYPE html>
-<html>
-<body style="background:#000;color:#fff;display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;margin:0;font-family:sans-serif;">
-    <h1 id="title">GRAPHICS TEST</h1>
-    <div id="stats" style="font-size:12px;color:#555;"></div>
-    <canvas id="c" style="background:#111;margin-top:20px;"></canvas>
-    
-    <script>
-        const config = window.MENTAL_CONFIG || { quality: 'high', fps: 60 };
-        document.getElementById('stats').innerText = "Kvalita: " + config.quality + " | FPS: " + (config.fps || 'Uncapped');
-        
-        const c = document.getElementById('c');
-        const ctx = c.getContext('2d');
-        c.width = 400; c.height = 200;
-        
-        // Ukážka prispôsobenia kvality
-        let count = config.quality === 'low' ? 20 : (config.quality === 'medium' ? 100 : 500);
-        let particles = Array.from({length: count}, () => ({
-            x: Math.random() * c.width,
-            y: Math.random() * c.height,
-            v: Math.random() * 2 + 1
-        }));
-
-        let last = 0;
-        function draw(t) {
-            // FPS Limiter logic
-            if(config.fps > 0) {
-                const delta = t - last;
-                if(delta < 1000 / config.fps) {
-                    requestAnimationFrame(draw);
-                    return;
-                }
-            }
-            last = t;
-
-            ctx.fillStyle = 'rgba(0,0,0,0.1)';
-            ctx.fillRect(0,0,c.width,c.height);
-            ctx.fillStyle = config.quality === 'high' ? '#0f0' : '#888';
-            particles.forEach(p => {
-                p.y += p.v;
-                if(p.y > c.height) p.y = 0;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, config.quality === 'high' ? 2 : 1, 0, Math.PI*2);
-                ctx.fill();
-            });
-            requestAnimationFrame(draw);
-        }
-        requestAnimationFrame(draw);
-    <\/script>
-</body>
-</html>`;
-                renderAssets();
+                document.getElementById('studio-icon').value = "🎮";
+                document.getElementById('studio-editor').value = `<!DOCTYPE html><html><body style="background:#000;color:#fff;display:flex;justify-content:center;align-items:center;height:100vh;"><h1>MOJA HRA</h1><\/body><\/html>`;
                 updatePreview();
             }
         }
 
-        studioEditor.oninput = updatePreview;
-
+        document.getElementById('studio-editor').oninput = updatePreview;
         function updatePreview() {
             const quality = document.getElementById('studio-setting-quality').value;
-            const fps = parseInt(document.getElementById('studio-setting-fps').value);
-            
-            document.getElementById('quality-indicator').innerText = "QUAL: " + quality.toUpperCase();
-            document.getElementById('fps-indicator').innerText = "FPS: " + (fps === 0 ? 'MAX' : fps);
-
-            const configScript = `
-                <script>
-                    window.MENTAL_SOUNDS = ${JSON.stringify(gameAssets)};
-                    window.MENTAL_CONFIG = { quality: "${quality}", fps: ${fps} };
-                <\/script>
-            `;
-            const blob = new Blob([configScript + studioEditor.value], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            studioPreview.src = url;
-            setTimeout(() => URL.revokeObjectURL(url), 100);
+            const fps = document.getElementById('studio-setting-fps').value;
+            const config = `<script>window.MENTAL_SOUNDS=${JSON.stringify(gameAssets)};window.MENTAL_CONFIG={quality:"${quality}",fps:${fps}};<\/script>`;
+            const blob = new Blob([config + document.getElementById('studio-editor').value], { type: 'text/html' });
+            document.getElementById('studio-preview').src = URL.createObjectURL(blob);
         }
 
         async function publishGame() {
-            const quality = document.getElementById('studio-setting-quality').value;
-            const fps = parseInt(document.getElementById('studio-setting-fps').value);
-
             const game = {
                 title: document.getElementById('studio-title').value,
                 icon: document.getElementById('studio-icon').value,
-                code: studioEditor.value,
+                code: document.getElementById('studio-editor').value,
                 assets: gameAssets,
-                config: { quality, fps },
+                video: gameVideo,
+                config: { quality: document.getElementById('studio-setting-quality').value, fps: parseInt(document.getElementById('studio-setting-fps').value) },
                 updatedAt: Date.now()
             };
             if (currentEditingId) game.id = currentEditingId;
-            const tx = db.transaction(DB_STORE_GAMES, 'readwrite');
-            tx.objectStore(DB_STORE_GAMES).put(game).onsuccess = () => {
-                showToast("Hra bola úspešne zverejnená!");
+            db.transaction('games', 'readwrite').objectStore('games').put(game).onsuccess = () => {
+                showToast("Hra so všetkými assetmi (aj videom) bola uložená!");
                 setTimeout(() => switchView('player'), 800);
             };
         }
 
-        // --- PLAYER & RUNNER ---
+        // --- PLAYER ---
         function loadGames() {
             const grid = document.getElementById('games-grid');
             grid.innerHTML = '';
-            const tx = db.transaction(DB_STORE_GAMES, 'readonly');
-            tx.objectStore(DB_STORE_GAMES).openCursor(null, 'prev').onsuccess = (e) => {
+            db.transaction('games', 'readonly').objectStore('games').openCursor(null, 'prev').onsuccess = (e) => {
                 const cursor = e.target.result;
                 if (cursor) {
                     const g = cursor.value;
                     const card = document.createElement('div');
-                    card.className = "group glass rounded-2xl p-4 flex flex-col items-center cursor-pointer hover:border-blue-500/50 transition-all";
+                    card.className = "game-card group relative h-64 glass rounded-3xl overflow-hidden cursor-pointer transition-all hover:scale-[1.02]";
                     card.innerHTML = `
-                        <div class="text-5xl mb-3">${g.icon}</div>
-                        <h4 class="font-bold text-sm truncate w-full text-center">${g.title}</h4>
-                        <div class="mt-4 flex space-x-2 w-full">
-                            <button onclick="playGame(${g.id})" class="flex-1 bg-blue-600/20 hover:bg-blue-600 p-2 rounded-lg transition-all"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="mx-auto"><polygon points="5 3 19 12 5 21 5 3"/></svg></button>
-                            <button onclick="openStudio(${g.id})" class="p-2 hover:bg-white/10 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>
-                            <button onclick="deleteGame(${g.id})" class="p-2 hover:text-red-500"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+                        <!-- Video Preview Overlay -->
+                        ${g.video ? `<video class="video-preview absolute inset-0 w-full h-full object-cover z-10" src="${g.video}" muted loop></video>` : ''}
+                        
+                        <!-- Content -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center z-0 group-hover:opacity-0 transition-opacity">
+                            <span class="text-7xl mb-4 font-bold tracking-tight">${g.icon}</span>
+                            <h3 class="font-black text-xl text-center px-4">${g.title}</h3>
+                        </div>
+
+                        <!-- Hover Controls -->
+                        <div class="absolute inset-0 bg-blue-600/20 opacity-0 group-hover:opacity-100 z-20 flex flex-col items-center justify-end p-6 transition-all">
+                            <div class="flex space-x-2 w-full">
+                                <button onclick="event.stopPropagation(); playGame(${g.id})" class="flex-1 bg-white text-blue-600 py-3 rounded-xl font-black text-sm uppercase">HRAŤ</button>
+                                <button onclick="event.stopPropagation(); openStudio(${g.id})" class="p-3 bg-white/10 rounded-xl"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>
+                                <button onclick="event.stopPropagation(); deleteGame(${g.id})" class="p-3 bg-white/10 rounded-xl hover:text-red-500"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg></button>
+                            </div>
                         </div>
                     `;
+                    
+                    // Add video hover logic
+                    if (g.video) {
+                        const video = card.querySelector('video');
+                        card.addEventListener('mouseenter', () => video.play());
+                        card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+                    }
+
                     grid.appendChild(card);
                     cursor.continue();
                 }
@@ -517,98 +424,42 @@
         }
 
         function playGame(id) {
-            const tx = db.transaction(DB_STORE_GAMES, 'readonly');
-            tx.objectStore(DB_STORE_GAMES).get(id).onsuccess = (e) => {
+            db.transaction('games', 'readonly').objectStore('games').get(id).onsuccess = (e) => {
                 const g = e.target.result;
+                if (!g) return;
                 document.getElementById('overlay-title').innerText = g.title;
                 document.getElementById('overlay-icon').innerText = g.icon;
                 document.getElementById('view-game-overlay').classList.remove('hidden');
-                
-                const quality = g.config?.quality || 'high';
-                const fps = g.config?.fps || 60;
-                
-                const configScript = `
-                    <script>
-                        window.MENTAL_SOUNDS = ${JSON.stringify(g.assets || {})};
-                        window.MENTAL_CONFIG = { quality: "${quality}", fps: ${fps} };
-                    <\/script>
-                `;
-                const blob = new Blob([configScript + g.code], { type: 'text/html' });
+                const config = `<script>window.MENTAL_SOUNDS=${JSON.stringify(g.assets || {})};window.MENTAL_CONFIG=${JSON.stringify(g.config || {quality:'high',fps:60})};<\/script>`;
+                const blob = new Blob([config + g.code], { type: 'text/html' });
                 document.getElementById('game-runner').src = URL.createObjectURL(blob);
             };
         }
+        function closeGame() { document.getElementById('view-game-overlay').classList.add('hidden'); document.getElementById('game-runner').src = "about:blank"; }
+        function deleteGame(id) { if(confirm("Zmazať hru?")) db.transaction('games', 'readwrite').objectStore('games').delete(id).onsuccess = loadGames; }
 
-        function closeGame() {
-            document.getElementById('view-game-overlay').classList.add('hidden');
-            document.getElementById('game-runner').src = "about:blank";
-        }
-
-        function deleteGame(id) {
-            if(confirm("Vymazať hru z databázy?")) {
-                db.transaction(DB_STORE_GAMES, 'readwrite').objectStore(DB_STORE_GAMES).delete(id).onsuccess = loadGames;
-            }
-        }
-
-        // --- AI ASISTENT ---
+        // --- AI ---
         async function generateAIGame() {
-            const userKey = await getSavedApiKey();
-            if (!userKey) {
-                alert("Najprv vlož svoj API kľúč v nastaveniach (hviezdička)!");
-                switchView('settings');
-                return;
-            }
-
-            const btn = document.getElementById('btn-ai-generate');
+            const key = document.getElementById('input-api-key').value;
+            if (!key) { switchView('settings'); return; }
             const loading = document.getElementById('ai-loading');
-            btn.disabled = true;
             loading.classList.remove('hidden');
-
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${userKey}`;
-            const prompt = "Vytvor bizardnú HTML5 minihru v jednom súbore. Hra musí byť experimentálna, divná a vizuálne prekvapivá. Vráť odpoveď vo formáte JSON: {title: '...', icon: '...', html: '...'}";
-            
             try {
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }],
-                        generationConfig: { responseMimeType: "application/json" }
-                    })
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${key}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: "Vytvor bizardnú HTML5 minihru. Vráť JSON: {title: '...', icon: '...', html: '...'}" }] }], generationConfig: { responseMimeType: "application/json" } })
                 });
                 const data = await res.json();
                 const result = JSON.parse(data.candidates[0].content.parts[0].text);
-                
-                const game = {
-                    title: result.title,
-                    icon: result.icon,
-                    code: result.html,
-                    assets: {},
-                    config: { quality: 'high', fps: 60 },
-                    updatedAt: Date.now()
-                };
-                
-                db.transaction(DB_STORE_GAMES, 'readwrite').objectStore(DB_STORE_GAMES).add(game);
+                db.transaction('games', 'readwrite').objectStore('games').add({ title: result.title, icon: result.icon, code: result.html, assets: {}, updatedAt: Date.now() });
                 document.getElementById('ai-last-result').classList.remove('hidden');
-                document.getElementById('ai-res-title').innerText = result.title;
-                showToast("AI úspešne vygenerovala a uložila hru!");
-            } catch (err) {
-                alert("Chyba pri generovaní. Skontroluj svoj API kľúč.");
-            } finally {
-                btn.disabled = false;
-                loading.classList.add('hidden');
-            }
+                loadGames();
+            } catch (err) { alert("Chyba API."); } finally { loading.classList.add('hidden'); }
         }
 
         // --- UTILS ---
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.remove('translate-y-20', 'opacity-0');
-            setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 3000);
-        }
-
-        window.onload = () => updatePreview();
+        function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.classList.remove('translate-y-20', 'opacity-0'); setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 3000); }
+        window.onload = () => { if (db) updatePreview(); };
     </script>
 </body>
 </html>
-
