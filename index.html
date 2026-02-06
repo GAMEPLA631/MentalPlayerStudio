@@ -241,7 +241,51 @@
 
         let currentEditingId = null;
         let gameAssets = {};
-        let gameVideo = null; // Base64 video data
+        let gameVideo = null; 
+
+        // --- HUD SCRIPT INJECTION ---
+        const HUD_SCRIPT = `
+            <style>
+                #mental-hud { position: fixed; top: 10px; left: 10px; z-index: 9999; pointer-events: none; font-family: 'Inter', sans-serif; }
+                .hud-item { background: rgba(0,0,0,0.7); border: 1px solid rgba(255,255,255,0.1); padding: 5px 12px; border-radius: 8px; color: #fff; font-size: 12px; font-weight: 800; display: flex; items-center: center; margin-bottom: 5px; }
+                #mental-leaderboard { position: fixed; top: 10px; right: 10px; z-index: 9999; width: 180px; background: rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px; color: #fff; font-family: 'Inter', sans-serif; pointer-events: none; }
+                .lb-title { font-size: 10px; font-weight: 900; color: #3b82f6; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 4px; }
+                .lb-user { font-size: 11px; display: flex; justify-content: space-between; margin-bottom: 4px; }
+                .lb-user.me { color: #facc15; }
+                .lb-dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; display: inline-block; margin-right: 6px; }
+            </style>
+            <div id="mental-hud">
+                <div class="hud-item"><span id="player-count">Načítavam...</span></div>
+            </div>
+            <div id="mental-leaderboard">
+                <div class="lb-title">Leaderboard</div>
+                <div id="lb-list"></div>
+            </div>
+            <script>
+                (function() {
+                    const aiNames = ["Shadow_Mental", "Bot_Alpha", "Neon_Ninja", "Cyber_Ghost", "Turbo_Pixel", "Glitch_Master", "Zora_AI", "X-Scanner"];
+                    const count = Math.floor(Math.random() * 6) + 3;
+                    const selectedAI = aiNames.sort(() => 0.5 - Math.random()).slice(0, count);
+                    
+                    const updateHUD = () => {
+                        const hud = document.getElementById('player-count');
+                        if(hud) hud.innerText = "Hráči: " + (count + 1);
+                        
+                        const list = document.getElementById('lb-list');
+                        if(list) {
+                            let html = '<div class="lb-user me"><span class="lb-dot"></span>Ty (Mental Player)</div>';
+                            selectedAI.forEach(name => {
+                                html += '<div class="lb-user"><span class="lb-dot"></span>' + name + '</div>';
+                            });
+                            list.innerHTML = html;
+                        }
+                    };
+
+                    if(document.readyState === 'complete') updateHUD();
+                    else window.addEventListener('load', updateHUD);
+                })();
+            <\/script>
+        `;
 
         // --- API KEY ---
         function saveApiKey() {
@@ -259,22 +303,13 @@
         document.getElementById('video-upload').addEventListener('change', async (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
-            // Check duration
             const videoElement = document.createElement('video');
             videoElement.preload = 'metadata';
             videoElement.onloadedmetadata = () => {
                 window.URL.revokeObjectURL(videoElement.src);
-                if (videoElement.duration > 61) {
-                    alert("Video je príliš dlhé! Limit je 60 sekúnd.");
-                    return;
-                }
-                
+                if (videoElement.duration > 61) { alert("Video je príliš dlhé! Limit je 60 sekúnd."); return; }
                 const reader = new FileReader();
-                reader.onload = (ev) => {
-                    gameVideo = ev.target.result;
-                    showVideoStatus();
-                };
+                reader.onload = (ev) => { gameVideo = ev.target.result; showVideoStatus(); };
                 reader.readAsDataURL(file);
             };
             videoElement.src = URL.createObjectURL(file);
@@ -358,7 +393,7 @@
         function updatePreview() {
             const quality = document.getElementById('studio-setting-quality').value;
             const fps = document.getElementById('studio-setting-fps').value;
-            const config = `<script>window.MENTAL_SOUNDS=${JSON.stringify(gameAssets)};window.MENTAL_CONFIG={quality:"${quality}",fps:${fps}};<\/script>`;
+            const config = `<script>window.MENTAL_SOUNDS=${JSON.stringify(gameAssets)};window.MENTAL_CONFIG={quality:"${quality}",fps:${fps}};<\/script>` + HUD_SCRIPT;
             const blob = new Blob([config + document.getElementById('studio-editor').value], { type: 'text/html' });
             document.getElementById('studio-preview').src = URL.createObjectURL(blob);
         }
@@ -375,7 +410,7 @@
             };
             if (currentEditingId) game.id = currentEditingId;
             db.transaction('games', 'readwrite').objectStore('games').put(game).onsuccess = () => {
-                showToast("Hra so všetkými assetmi (aj videom) bola uložená!");
+                showToast("Zverejnené!");
                 setTimeout(() => switchView('player'), 800);
             };
         }
@@ -391,16 +426,11 @@
                     const card = document.createElement('div');
                     card.className = "game-card group relative h-64 glass rounded-3xl overflow-hidden cursor-pointer transition-all hover:scale-[1.02]";
                     card.innerHTML = `
-                        <!-- Video Preview Overlay -->
                         ${g.video ? `<video class="video-preview absolute inset-0 w-full h-full object-cover z-10" src="${g.video}" muted loop></video>` : ''}
-                        
-                        <!-- Content -->
                         <div class="absolute inset-0 flex flex-col items-center justify-center z-0 group-hover:opacity-0 transition-opacity">
                             <span class="text-7xl mb-4 font-bold tracking-tight">${g.icon}</span>
                             <h3 class="font-black text-xl text-center px-4">${g.title}</h3>
                         </div>
-
-                        <!-- Hover Controls -->
                         <div class="absolute inset-0 bg-blue-600/20 opacity-0 group-hover:opacity-100 z-20 flex flex-col items-center justify-end p-6 transition-all">
                             <div class="flex space-x-2 w-full">
                                 <button onclick="event.stopPropagation(); playGame(${g.id})" class="flex-1 bg-white text-blue-600 py-3 rounded-xl font-black text-sm uppercase">HRAŤ</button>
@@ -409,14 +439,11 @@
                             </div>
                         </div>
                     `;
-                    
-                    // Add video hover logic
                     if (g.video) {
                         const video = card.querySelector('video');
                         card.addEventListener('mouseenter', () => video.play());
                         card.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
                     }
-
                     grid.appendChild(card);
                     cursor.continue();
                 }
@@ -430,7 +457,7 @@
                 document.getElementById('overlay-title').innerText = g.title;
                 document.getElementById('overlay-icon').innerText = g.icon;
                 document.getElementById('view-game-overlay').classList.remove('hidden');
-                const config = `<script>window.MENTAL_SOUNDS=${JSON.stringify(g.assets || {})};window.MENTAL_CONFIG=${JSON.stringify(g.config || {quality:'high',fps:60})};<\/script>`;
+                const config = `<script>window.MENTAL_SOUNDS=${JSON.stringify(g.assets || {})};window.MENTAL_CONFIG=${JSON.stringify(g.config || {quality:'high',fps:60})};<\/script>` + HUD_SCRIPT;
                 const blob = new Blob([config + g.code], { type: 'text/html' });
                 document.getElementById('game-runner').src = URL.createObjectURL(blob);
             };
@@ -438,7 +465,6 @@
         function closeGame() { document.getElementById('view-game-overlay').classList.add('hidden'); document.getElementById('game-runner').src = "about:blank"; }
         function deleteGame(id) { if(confirm("Zmazať hru?")) db.transaction('games', 'readwrite').objectStore('games').delete(id).onsuccess = loadGames; }
 
-        // --- AI ---
         async function generateAIGame() {
             const key = document.getElementById('input-api-key').value;
             if (!key) { switchView('settings'); return; }
@@ -457,7 +483,6 @@
             } catch (err) { alert("Chyba API."); } finally { loading.classList.add('hidden'); }
         }
 
-        // --- UTILS ---
         function showToast(m) { const t = document.getElementById('toast'); t.innerText = m; t.classList.remove('translate-y-20', 'opacity-0'); setTimeout(() => t.classList.add('translate-y-20', 'opacity-0'), 3000); }
         window.onload = () => { if (db) updatePreview(); };
     </script>
